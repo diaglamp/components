@@ -24,6 +24,7 @@ typedef NS_ENUM (NSUInteger, FYChartFormatType) {
 
 //弧线占圆百分比,只能初始化或者通过方法修改
 @property (nonatomic,readonly,assign) CGFloat percent;
+
 //线宽,默认
 @property (nonatomic,assign) CGFloat lineWidth;
 //线条颜色，默认绿色
