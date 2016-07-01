@@ -8,112 +8,80 @@
 
 #import "FYHealthyCircleView.h"
 
+#define LINE_WIDTH_DEFAULT 12.0
+#define COLOR_DEFAULT [UIColor greenColor]
+
 @interface FYHealthyCircleView()
+
+@property (nonatomic) CAShapeLayer *circle;
+@property (nonatomic) CAShapeLayer *gradientMask;
+@property (nonatomic) CAShapeLayer *circleBackground;
 
 @end
 
 @implementation FYHealthyCircleView
 
-- (id)initWithFrame:(CGRect)frame total:(NSNumber *)total current:(NSNumber *)current clockwise:(BOOL)clockwise {
-    
-    return [self initWithFrame:frame
-                         total:total
-                       current:current
-                     clockwise:clockwise
-                        shadow:NO
-                   shadowColor:[UIColor clearColor]
-          displayCountingLabel:YES
-             overrideLineWidth:@8.0f];
-    
+- (instancetype)initWithFrame:(CGRect)frame{
+    return [self initWithFrame:frame percent:0];
 }
 
-- (id)initWithFrame:(CGRect)frame total:(NSNumber *)total current:(NSNumber *)current clockwise:(BOOL)clockwise shadow:(BOOL)hasBackgroundShadow shadowColor:(UIColor *)backgroundShadowColor {
-    
-    return [self initWithFrame:frame
-                         total:total
-                       current:current
-                     clockwise:clockwise
-                        shadow:shadow
-                   shadowColor:backgroundShadowColor
-          displayCountingLabel:YES
-             overrideLineWidth:@8.0f];
-    
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent{
+    return [self initWithFrame:frame percent:percent lineWidth:LINE_WIDTH_DEFAULT strokeColor:COLOR_DEFAULT animated:NO];
 }
 
-- (id)initWithFrame:(CGRect)frame total:(NSNumber *)total current:(NSNumber *)current clockwise:(BOOL)clockwise shadow:(BOOL)hasBackgroundShadow shadowColor:(UIColor *)backgroundShadowColor displayCountingLabel:(BOOL)displayCountingLabel {
-    
-    return [self initWithFrame:frame
-                         total:total
-                       current:current
-                     clockwise:clockwise
-                        shadow:shadow
-                   shadowColor:backgroundShadowColor
-          displayCountingLabel:displayCountingLabel
-             overrideLineWidth:@8.0f];
-    
-}
-
-- (id)initWithFrame:(CGRect)frame
-              total:(NSNumber *)total
-            current:(NSNumber *)current
-          clockwise:(BOOL)clockwise
-             shadow:(BOOL)hasBackgroundShadow
-        shadowColor:(UIColor *)backgroundShadowColor
-displayCountingLabel:(BOOL)displayCountingLabel
-  overrideLineWidth:(NSNumber *)overrideLineWidth
-{
-    self = [super initWithFrame:frame];
-    
-    if (self) {
-        _total = total;
-        _current = current;
-        _strokeColor = [UIColor greenColor];
-        _duration = 1.0;
-        _chartType = PNChartFormatTypePercent;
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor animated:(BOOL)animated{
+    if (self = [super initWithFrame:frame]) {
+        _percent = percent;
+        _lineWidth = lineWidth;
+        _strokeColor = strokeColor;
+        _animated = animated;
+        _duration = 1.0f;
+        _clockwise = YES;
+        _chartType = FYChartFormatTypeArc;
         
-        _displayCountingLabel = displayCountingLabel;
-        
-        CGFloat startAngle = clockwise ? -90.0f : 270.0f;
-        CGFloat endAngle = clockwise ? -90.01f : 270.01f;
-        
-        _lineWidth = overrideLineWidth;
+        CGFloat startAngle = _clockwise ? -90.0f : 270.0f;
+        CGFloat endAngle = _clockwise ? -90.01f : 270.01f;
         
         UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(frame.size.width/2.0f, frame.size.height/2.0f)
-                                                                  radius:(frame.size.width * 0.5) - ([_lineWidth floatValue]/2.0f)
+                                                                  radius:(frame.size.width * 0.5) - (_lineWidth/2.0f)
                                                               startAngle:DEGREES_TO_RADIANS(startAngle)
                                                                 endAngle:DEGREES_TO_RADIANS(endAngle)
-                                                               clockwise:clockwise];
+                                                               clockwise:_clockwise];
         
         _circle               = [CAShapeLayer layer];
         _circle.path          = circlePath.CGPath;
         _circle.lineCap       = kCALineCapRound;
         _circle.fillColor     = [UIColor clearColor].CGColor;
-        _circle.lineWidth     = [_lineWidth floatValue];
+        _circle.strokeColor   = strokeColor.CGColor;
+        _circle.lineWidth     = _lineWidth;
         _circle.zPosition     = 1;
+        
         
         _circleBackground             = [CAShapeLayer layer];
         _circleBackground.path        = circlePath.CGPath;
         _circleBackground.lineCap     = kCALineCapRound;
         _circleBackground.fillColor   = [UIColor clearColor].CGColor;
-        _circleBackground.lineWidth   = [_lineWidth floatValue];
-        _circleBackground.strokeColor = (hasBackgroundShadow ? backgroundShadowColor.CGColor : [UIColor clearColor].CGColor);
+        _circleBackground.lineWidth   = _lineWidth;
+        _circleBackground.strokeColor = [UIColor clearColor].CGColor;
         _circleBackground.strokeEnd   = 1.0;
         _circleBackground.zPosition   = -1;
         
         [self.layer addSublayer:_circle];
         [self.layer addSublayer:_circleBackground];
-        
     }
-    
     return self;
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
 }
 
 - (void)strokeChart
 {
     // Add circle params
     
-    _circle.lineWidth   = [_lineWidth floatValue];
-    _circleBackground.lineWidth = [_lineWidth floatValue];
+    _circle.lineWidth   = _lineWidth;
+    _circleBackground.lineWidth = _lineWidth;
     _circleBackground.strokeEnd = 1.0;
     _circle.strokeColor = _strokeColor.CGColor;
     
@@ -122,9 +90,9 @@ displayCountingLabel:(BOOL)displayCountingLabel
     pathAnimation.duration = self.duration;
     pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     pathAnimation.fromValue = @0.0f;
-    pathAnimation.toValue = @([_current floatValue] / [_total floatValue]);
+    pathAnimation.toValue = @(_percent);
     [_circle addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-    _circle.strokeEnd   = [_current floatValue] / [_total floatValue];
+    _circle.strokeEnd   = _percent;
     
     // Check if user wants to add a gradient from the start color to the bar color
     if (_strokeColorGradientStart) {
@@ -154,7 +122,7 @@ displayCountingLabel:(BOOL)displayCountingLabel
         
         [_circle addSublayer:gradientLayer];
         
-        self.gradientMask.strokeEnd = [_current floatValue] / [_total floatValue];
+        self.gradientMask.strokeEnd = _percent;
         
         [self.gradientMask addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
     }
@@ -197,4 +165,10 @@ displayCountingLabel:(BOOL)displayCountingLabel
     _current = current;
     _total = total;
 }
+
+//更新百分比
+- (void)updateChartByPercent:(CGFloat)percent;
+
+//在当前百分比变化到指定值（开启动画才有效）
+- (void)growChartToPercent:(CGFloat)percent;
 @end

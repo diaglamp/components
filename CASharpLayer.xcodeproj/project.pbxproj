@@ -15,6 +15,8 @@
 		8B40E6721D26060200DCA13D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B40E6701D26060200DCA13D /* LaunchScreen.storyboard */; };
 		8B40E67D1D26060200DCA13D /* CASharpLayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B40E67C1D26060200DCA13D /* CASharpLayerTests.m */; };
 		8B40E6881D26060200DCA13D /* CASharpLayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B40E6871D26060200DCA13D /* CASharpLayerUITests.m */; };
+		8B40E6991D26061600DCA13D /* FYHealthyCircleChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B40E6961D26061600DCA13D /* FYHealthyCircleChart.m */; };
+		8B40E69A1D26061600DCA13D /* FYHealthyCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B40E6981D26061600DCA13D /* FYHealthyCircleView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		8B40E6831D26060200DCA13D /* CASharpLayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CASharpLayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B40E6871D26060200DCA13D /* CASharpLayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASharpLayerUITests.m; sourceTree = "<group>"; };
 		8B40E6891D26060200DCA13D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B40E6951D26061600DCA13D /* FYHealthyCircleChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYHealthyCircleChart.h; sourceTree = "<group>"; };
+		8B40E6961D26061600DCA13D /* FYHealthyCircleChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYHealthyCircleChart.m; sourceTree = "<group>"; };
+		8B40E6971D26061600DCA13D /* FYHealthyCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYHealthyCircleView.h; sourceTree = "<group>"; };
+		8B40E6981D26061600DCA13D /* FYHealthyCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYHealthyCircleView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,10 @@
 		8B40E6611D26060200DCA13D /* CASharpLayer */ = {
 			isa = PBXGroup;
 			children = (
+				8B40E6951D26061600DCA13D /* FYHealthyCircleChart.h */,
+				8B40E6961D26061600DCA13D /* FYHealthyCircleChart.m */,
+				8B40E6971D26061600DCA13D /* FYHealthyCircleView.h */,
+				8B40E6981D26061600DCA13D /* FYHealthyCircleView.m */,
 				8B40E6651D26060200DCA13D /* AppDelegate.h */,
 				8B40E6661D26060200DCA13D /* AppDelegate.m */,
 				8B40E6681D26060200DCA13D /* ViewController.h */,
@@ -272,7 +282,9 @@
 			files = (
 				8B40E66A1D26060200DCA13D /* ViewController.m in Sources */,
 				8B40E6671D26060200DCA13D /* AppDelegate.m in Sources */,
+				8B40E69A1D26061600DCA13D /* FYHealthyCircleView.m in Sources */,
 				8B40E6641D26060200DCA13D /* main.m in Sources */,
+				8B40E6991D26061600DCA13D /* FYHealthyCircleChart.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

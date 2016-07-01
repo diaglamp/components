@@ -8,65 +8,58 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM (NSUInteger, PNChartFormatType) {
-    PNChartFormatTypePercent,
-    PNChartFormatTypeDollar,
-    PNChartFormatTypeNone,
-    PNChartFormatTypeDecimal,
-    PNChartFormatTypeDecimalTwoPlaces,
-};
+#define RGBHEX(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define RGBAHEX(rgbValue, a) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:a]
 
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
+typedef NS_ENUM (NSUInteger, FYChartFormatType) {
+    FYChartFormatTypeArc, //弧线
+    FYChartFormatTypeSector //扇形
+};
+
+//百分比图
 @interface FYHealthyCircleView : UIView
 
+//弧线占圆百分比,只能初始化或者通过方法修改
+@property (nonatomic,readonly,assign) CGFloat percent;
+//线宽,默认
+@property (nonatomic,assign) CGFloat lineWidth;
+//线条颜色，默认绿色
+@property (nonatomic,strong) UIColor *strokeColor;
+//渐变颜色,默认为nil
+@property (nonatomic,strong) UIColor *strokeColorGradientStart;
+//是否播放动画，default YES
+@property (nonatomic,assign,getter=isAnimated) BOOL animated;
+//动画播放时间，默认1s （TODO ：提供 播放时间 = 系数 * percent 的接口）
+@property (nonatomic,assign) NSTimeInterval duration;
+//是否顺时针，默认顺时针
+@property (nonatomic,assign,getter=isClockwise) BOOL clockwise;
+
+
+//以下属性未完成 
+//图标类型，默认是线 其他功能未完成
+@property (nonatomic,assign) FYChartFormatType chartType;
+//是否文字显示百分比,defalut is NO
+@property (nonatomic,assign) BOOL displayCountingLabel;
+
+//shadow属性 后续添加
+
+
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent;
+
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor animated:(BOOL)animated;
+
+//开始画图
 - (void)strokeChart;
-- (void)growChartByAmount:(NSNumber *)growAmount;
-- (void)updateChartByCurrent:(NSNumber *)current;
-- (void)updateChartByCurrent:(NSNumber *)current byTotal:(NSNumber *)total;
-- (id)initWithFrame:(CGRect)frame
-              total:(NSNumber *)total
-            current:(NSNumber *)current
-          clockwise:(BOOL)clockwise;
 
-- (id)initWithFrame:(CGRect)frame
-              total:(NSNumber *)total
-            current:(NSNumber *)current
-          clockwise:(BOOL)clockwise
-             shadow:(BOOL)hasBackgroundShadow
-        shadowColor:(UIColor *)backgroundShadowColor;
+//更新百分比
+- (void)updateChartByPercent:(CGFloat)percent;
 
-- (id)initWithFrame:(CGRect)frame
-              total:(NSNumber *)total
-            current:(NSNumber *)current
-          clockwise:(BOOL)clockwise
-             shadow:(BOOL)hasBackgroundShadow
-        shadowColor:(UIColor *)backgroundShadowColor
-displayCountingLabel:(BOOL)displayCountingLabel;
-
-- (id)initWithFrame:(CGRect)frame
-              total:(NSNumber *)total
-            current:(NSNumber *)current
-          clockwise:(BOOL)clockwise
-             shadow:(BOOL)hasBackgroundShadow
-        shadowColor:(UIColor *)backgroundShadowColor
-displayCountingLabel:(BOOL)displayCountingLabel
-  overrideLineWidth:(NSNumber *)overrideLineWidth;
+//开始动画
 
 
-@property (nonatomic) UIColor *strokeColor;
-@property (nonatomic) UIColor *strokeColorGradientStart;
-@property (nonatomic) NSNumber *total;
-@property (nonatomic) NSNumber *current;
-@property (nonatomic) NSNumber *lineWidth;
-@property (nonatomic) NSTimeInterval duration;
-@property (nonatomic) PNChartFormatType chartType;
-
-
-@property (nonatomic) CAShapeLayer *circle;
-@property (nonatomic) CAShapeLayer *gradientMask;
-@property (nonatomic) CAShapeLayer *circleBackground;
-
-@property (nonatomic) BOOL displayCountingLabel;
-
+//在当前百分比变化到指定值（开启动画才有效）
+- (void)growChartToPercent:(CGFloat)percent;
 @end
