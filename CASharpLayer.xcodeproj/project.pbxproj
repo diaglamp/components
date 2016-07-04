@@ -428,6 +428,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CASharpLayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiaohuoji.CASharpLayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -439,6 +440,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CASharpLayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiaohuoji.CASharpLayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -510,6 +512,7 @@
 				8B40E68E1D26060200DCA13D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B40E68F1D26060200DCA13D /* Build configuration list for PBXNativeTarget "CASharpLayerTests" */ = {
 			isa = XCConfigurationList;
@@ -518,6 +521,7 @@
 				8B40E6911D26060200DCA13D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B40E6921D26060200DCA13D /* Build configuration list for PBXNativeTarget "CASharpLayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +530,7 @@
 				8B40E6941D26060200DCA13D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -11,5 +11,11 @@
 @class FYHealthyCircleView;
 @interface FYHealthyCircleChart : UIView
 
--(void)updateBasisValue:(CGFloat)basisValue circleChartPlay:(CGFloat)playValue;
+@property (nonatomic,assign) CGFloat basicConsumePercent;
+@property (nonatomic,assign) CGFloat sportConsumePercent;
+
+- (instancetype)initWithFrame:(CGRect)frame basicPercent:(CGFloat)basic sportPercent:(CGFloat)sport;
+//开始动画
+- (void)startStroke;
+
 @end

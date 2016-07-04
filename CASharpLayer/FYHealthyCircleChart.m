@@ -16,11 +16,8 @@
 
 @interface FYHealthyCircleChart()
 
-@property (nonatomic) FYHealthyCircleView * circleChartBasis;
-@property (nonatomic) FYHealthyCircleView * circleChartPlay;
-
-@property (nonatomic) CAShapeLayer *line;
-@property (nonatomic) CAShapeLayer *linePlay;
+@property (nonatomic) FYHealthyCircleView * circleChartBasic;
+@property (nonatomic) FYHealthyCircleView * circleChartSport;
 
 @end
 
@@ -28,11 +25,16 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    
-    if (self) {
+    return [self initWithFrame:frame basicPercent:0 sportPercent:0];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame basicPercent:(CGFloat)basic sportPercent:(CGFloat)sport{
+    //暂时是固定大小
+    frame = CGRectMake(frame.origin.x, frame.origin.y, 100, 100);
+    if (self = [super initWithFrame:frame]) {
+        _basicConsumePercent = basic;
+        _sportConsumePercent = sport;
         [self setupDefaultValues:frame];
-        
     }
     
     return self;
@@ -44,46 +46,25 @@
     
     [self drawLine];
     
-    _circleChartBasis=({
-        
-        FYHealthyCircleView *Circhart = [[FYHealthyCircleView alloc]initWithFrame:CGRectMake(0,150.0, CIRCLE_IN_HEIGHT, CIRCLE_IN_HEIGHT)
-                                                                    total:@100
-                                                                  current:@0
-                                                                clockwise:YES];
-        Circhart.lineWidth = @6;
-        Circhart.backgroundColor = [UIColor clearColor];
-        [Circhart setStrokeColor:RGBAHEX(0x008850,1)];
-        [Circhart setStrokeColorGradientStart:[UIColor clearColor]];
-        [Circhart strokeChart];
+    _circleChartBasic=({
+        FYHealthyCircleView *Circhart = [[FYHealthyCircleView alloc]initWithFrame:CGRectMake(0, 0, CIRCLE_MINDLE_HEIGHT, CIRCLE_MINDLE_HEIGHT) percent:_basicConsumePercent lineWidth:6 strokeColor:RGBAHEX(0x2acc89,1) animated:YES gradientColor:nil lineDashPattern:nil];
         Circhart;
-        
     });
-    [self addSubview:_circleChartBasis];
+    [self addSubview:_circleChartBasic];
     
     
-    _circleChartPlay=({
+    _circleChartSport=({
         
-        FYHealthyCircleView *Circhart=[[FYHealthyCircleView alloc]initWithFrame:CGRectMake(0,150.0, CIRCLE_MINDLE_HEIGHT, CIRCLE_MINDLE_HEIGHT)
-                                                                    total:@100
-                                                                  current:@0
-                                                                clockwise:YES];
-        Circhart.lineWidth = @6;
-        Circhart.backgroundColor = [UIColor clearColor];
-        [Circhart setStrokeColor:RGBAHEX(0x2acc89,1)];
-        [Circhart setStrokeColorGradientStart:[UIColor clearColor]];
-        [Circhart strokeChart];
+        FYHealthyCircleView *Circhart=[[FYHealthyCircleView alloc]initWithFrame:CGRectMake(0, 0, CIRCLE_IN_HEIGHT, CIRCLE_IN_HEIGHT) percent:_sportConsumePercent lineWidth:6 strokeColor:RGBAHEX(0x008850,1) animated:YES gradientColor:nil lineDashPattern:nil];
         Circhart;
-        
     });
-    [self addSubview:_circleChartPlay];
-    _circleChartPlay.center=CGPointMake(CIRCLE_OUT_HEIGHT/2, CIRCLE_OUT_HEIGHT/2);
-    _circleChartBasis.center=_circleChartPlay.center;
+    [self addSubview:_circleChartSport];
+    _circleChartSport.center=CGPointMake(CIRCLE_OUT_HEIGHT/2, CIRCLE_OUT_HEIGHT/2);
+    _circleChartBasic.center=_circleChartSport.center;
 }
 
 
--(void)drawLine
-{
-    
+- (void)drawLine{
     CGFloat lineWidth = LINE_WIDTH;
     CGFloat startAngle = -90.0f ;
     CGFloat endAngle = -90.01f ;
@@ -93,14 +74,14 @@
                                                             endAngle:DEGREES_TO_RADIANS(endAngle)
                                                            clockwise:YES];
     
-    _line =  [CAShapeLayer layer];
-    _line.lineWidth = 0.5f ;
-    _line.strokeColor = RGBAHEX(0xe9e9e9,1).CGColor;
-    _line.fillColor = [UIColor clearColor].CGColor;
-    _line.path = circlePath.CGPath;
-    _line.lineDashPhase = 2;
-    _line.lineDashPattern=[NSArray arrayWithObjects:[NSNumber numberWithInt:3], [NSNumber numberWithInt:3],nil];
-    [self.layer addSublayer:_line];
+    CAShapeLayer *line =  [CAShapeLayer layer];
+    line.lineWidth = 0.5f ;
+    line.strokeColor = RGBAHEX(0xe9e9e9,1).CGColor;
+    line.fillColor = [UIColor clearColor].CGColor;
+    line.path = circlePath.CGPath;
+    line.lineDashPhase = 2;
+    line.lineDashPattern=[NSArray arrayWithObjects:[NSNumber numberWithInt:3], [NSNumber numberWithInt:3],nil];
+    [self.layer addSublayer:line];
     
     
     UIBezierPath *circlePathPlay = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f)
@@ -109,17 +90,15 @@
                                                                 endAngle:DEGREES_TO_RADIANS(endAngle)
                                                                clockwise:YES];
     
-    _linePlay =  [CAShapeLayer layer];
-    _linePlay.lineWidth = 0.5f ;
-    _linePlay.strokeColor = RGBAHEX(0xe9e9e9,1).CGColor;
-    _linePlay.fillColor = [UIColor clearColor].CGColor;
-    _linePlay.path = circlePathPlay.CGPath;
-    _linePlay.lineDashPhase = 2;
-    _linePlay.lineDashPattern=[NSArray arrayWithObjects:[NSNumber numberWithInt:3], [NSNumber numberWithInt:3],nil];
-    [self.layer addSublayer:_linePlay];
-    
-    
-    
+    CAShapeLayer *linePlay =  [CAShapeLayer layer];
+    linePlay.lineWidth = 0.5f ;
+    linePlay.strokeColor = RGBAHEX(0xe9e9e9,1).CGColor;
+    linePlay.fillColor = [UIColor clearColor].CGColor;
+    linePlay.path = circlePathPlay.CGPath;
+    linePlay.lineDashPhase = 2;
+    linePlay.lineDashPattern=[NSArray arrayWithObjects:[NSNumber numberWithInt:3], [NSNumber numberWithInt:3],nil];
+    [self.layer addSublayer:linePlay];
+
     CAShapeLayer *line2;
     UIBezierPath *circlePath2 = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f)
                                                                radius:((CIRCLE_OUT_HEIGHT * 0.5) - (lineWidth/2.0f))
@@ -138,10 +117,20 @@
     
 }
 
--(void)updateBasisValue:(CGFloat)basisValue circleChartPlay:(CGFloat)playValue
-{
-    [_circleChartPlay updateChartByCurrent:@(playValue)];
-    [_circleChartBasis updateChartByCurrent:@(basisValue)];
+- (void)startStroke{
+    [_circleChartBasic startStroke];
+    [_circleChartSport startStroke];
+}
+
+#pragma mark - setter
+- (void)setBasicConsumePercent:(CGFloat)basicConsumePercent{
+    _basicConsumePercent = basicConsumePercent;
+    [_circleChartBasic growChartToPercent:_basicConsumePercent];
+}
+
+- (void)setSportConsumePercent:(CGFloat)sportConsumePercent{
+    _sportConsumePercent = sportConsumePercent;
+    [_circleChartSport updateChartByPercent:_sportConsumePercent];
 }
 
 @end

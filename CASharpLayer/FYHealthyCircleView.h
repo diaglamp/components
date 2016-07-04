@@ -16,7 +16,7 @@
 
 typedef NS_ENUM (NSUInteger, FYChartFormatType) {
     FYChartFormatTypeArc, //弧线
-    FYChartFormatTypeSector //扇形
+    FYChartFormatTypeSector //扇形 TODO
 };
 
 //百分比图
@@ -24,19 +24,21 @@ typedef NS_ENUM (NSUInteger, FYChartFormatType) {
 
 //弧线占圆百分比,只能初始化或者通过方法修改
 @property (nonatomic,readonly,assign) CGFloat percent;
-
 //线宽,默认
 @property (nonatomic,assign) CGFloat lineWidth;
 //线条颜色，默认绿色
 @property (nonatomic,strong) UIColor *strokeColor;
-//渐变颜色,默认为nil
-@property (nonatomic,strong) UIColor *strokeColorGradientStart;
+//是否顺时针，默认顺时针
+@property (nonatomic,assign,getter=isClockwise) BOOL clockwise;
+
+//渐变颜色,defalut nil
+@property (nonatomic,readonly,strong) UIColor *gradientColor;
+//虚线模式 （2，3）,default nil
+@property (nonatomic,readonly,strong) NSArray<NSNumber *> *lineDashPattern;
 //是否播放动画，default YES
 @property (nonatomic,assign,getter=isAnimated) BOOL animated;
 //动画播放时间，默认1s （TODO ：提供 播放时间 = 系数 * percent 的接口）
 @property (nonatomic,assign) NSTimeInterval duration;
-//是否顺时针，默认顺时针
-@property (nonatomic,assign,getter=isClockwise) BOOL clockwise;
 
 
 //以下属性未完成 
@@ -47,19 +49,16 @@ typedef NS_ENUM (NSUInteger, FYChartFormatType) {
 
 //shadow属性 后续添加
 
-
+// initialize
 - (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent;
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor;
+- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor animated:(BOOL)animated gradientColor:(UIColor *)gradientColor lineDashPattern:(NSArray<NSNumber *> *)lineDashPattern;
 
-- (instancetype)initWithFrame:(CGRect)frame percent:(CGFloat)percent lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor animated:(BOOL)animated;
-
-//开始画图
-- (void)strokeChart;
+//开始动画
+- (void)startStroke;
 
 //更新百分比
 - (void)updateChartByPercent:(CGFloat)percent;
-
-//开始动画
-
 
 //在当前百分比变化到指定值（开启动画才有效）
 - (void)growChartToPercent:(CGFloat)percent;
