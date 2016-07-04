@@ -3,7 +3,7 @@
 //  Pet
 //
 //  Created by 邓伟杰 on 16/6/30.
-//  Copyright © 2016年 Yourpet. All rights reserved.
+//  Copyright © 2016年 XHJ. All rights reserved.
 //
 
 #import "FYHealthyCircleView.h"
@@ -15,7 +15,6 @@
 
 @property (nonatomic) CAShapeLayer *circle;
 @property (nonatomic) CAShapeLayer *gradientMask;
-@property (nonatomic) CAShapeLayer *circleBackground;
 
 @end
 
@@ -39,41 +38,37 @@
         _clockwise = YES;
         _chartType = FYChartFormatTypeArc;
         
-        CGFloat startAngle = _clockwise ? -90.0f : 270.0f;
-        CGFloat endAngle = _clockwise ? -90.01f : 270.01f;
         
-        UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(frame.size.width/2.0f, frame.size.height/2.0f)
-                                                                  radius:(frame.size.width * 0.5) - (_lineWidth/2.0f)
-                                                              startAngle:DEGREES_TO_RADIANS(startAngle)
-                                                                endAngle:DEGREES_TO_RADIANS(endAngle)
-                                                               clockwise:_clockwise];
+        
+        
         
         _circle               = [CAShapeLayer layer];
-        _circle.path          = circlePath.CGPath;
         _circle.lineCap       = kCALineCapRound;
         _circle.fillColor     = [UIColor clearColor].CGColor;
         _circle.strokeColor   = strokeColor.CGColor;
         _circle.lineWidth     = _lineWidth;
         _circle.zPosition     = 1;
         
-        
-        _circleBackground             = [CAShapeLayer layer];
-        _circleBackground.path        = circlePath.CGPath;
-        _circleBackground.lineCap     = kCALineCapRound;
-        _circleBackground.fillColor   = [UIColor clearColor].CGColor;
-        _circleBackground.lineWidth   = _lineWidth;
-        _circleBackground.strokeColor = [UIColor clearColor].CGColor;
-        _circleBackground.strokeEnd   = 1.0;
-        _circleBackground.zPosition   = -1;
-        
         [self.layer addSublayer:_circle];
-        [self.layer addSublayer:_circleBackground];
     }
     return self;
 }
 
 - (void)layoutSubviews{
     [super layoutSubviews];
+    CGFloat startAngle = _clockwise ? -90.0f : 270.0f;
+    CGFloat endAngle = _clockwise ? -90.01f : 270.01f;
+    UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f)
+                                                              radius:(self.frame.size.width * 0.5) - (_lineWidth/2.0f)
+                                                          startAngle:DEGREES_TO_RADIANS(startAngle)
+                                                            endAngle:DEGREES_TO_RADIANS(endAngle)
+                                                           clockwise:_clockwise];
+    _circle.path          = circlePath.CGPath;
+    
+}
+
+- (void)drawRect:(CGRect)rect{
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
 }
 
 - (void)strokeChart
@@ -81,9 +76,9 @@
     // Add circle params
     
     _circle.lineWidth   = _lineWidth;
-    _circleBackground.lineWidth = _lineWidth;
-    _circleBackground.strokeEnd = 1.0;
     _circle.strokeColor = _strokeColor.CGColor;
+//    _circleBackground.lineWidth = _lineWidth;
+//    _circleBackground.strokeEnd = 1.0;
     
     // Add Animation
     CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -128,47 +123,13 @@
     }
 }
 
-- (void)growChartByAmount:(NSNumber *)growAmount
-{
-    NSNumber *updatedValue = [NSNumber numberWithFloat:[_current floatValue] + [growAmount floatValue]];
-    
-    // Add animation
-    [self updateChartByCurrent:updatedValue];
-}
-
-
--(void)updateChartByCurrent:(NSNumber *)current{
-    if(current && ([current floatValue] > 0)){
-        [self updateChartByCurrent:current
-                           byTotal:_total];
-    }else{
-        [self updateChartByCurrent:@(0)
-                           byTotal:_total];
-    }
-}
-
--(void)updateChartByCurrent:(NSNumber *)current byTotal:(NSNumber *)total {
-    // Add animation
-    CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    pathAnimation.duration = self.duration;
-    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    pathAnimation.fromValue = @([_current floatValue] / [_total floatValue]);
-    pathAnimation.toValue = @([current floatValue] / [total floatValue]);
-    _circle.strokeEnd   = [current floatValue] / [total floatValue];
-    
-    if (_strokeColorGradientStart) {
-        self.gradientMask.strokeEnd = _circle.strokeEnd;
-        [self.gradientMask addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-    }
-    [_circle addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-    
-    _current = current;
-    _total = total;
-}
-
 //更新百分比
-- (void)updateChartByPercent:(CGFloat)percent;
+- (void)updateChartByPercent:(CGFloat)percent{
+    
+}
 
 //在当前百分比变化到指定值（开启动画才有效）
-- (void)growChartToPercent:(CGFloat)percent;
+- (void)growChartToPercent:(CGFloat)percent{
+    
+}
 @end
